@@ -1,0 +1,61 @@
+# @package _global_
+# to execute this experiment run:
+# python train.py experiment=example
+
+defaults:
+  - override /model: Uncertainty
+
+batch_size: 8
+num_workers: 24
+
+model:
+  is_warmup: true
+  net:
+    _target_: src.models.base.Uncertainty_
+    is_fill: true
+    backbone_g:
+      _target_: src.models.backbones.PVTV2
+      model_name: 'pvt_v2_b1'
+      pretrained: pretrain/pvt_v2_b1.pth
+      is_fill: true
+    backbone_l:
+      _target_: src.models.backbones.ResNetU_
+      model_name: 'resnet18'
+      is_fill: true
+    decode:
+      _target_: src.models.decodes.UncertaintyFuse_
+      bot_channel: 64
+      g_in_channels: [512, 320, 128, 64]
+      l_in_channels: [512, 512, 256, 128, 64]
+      fuse_channel: 128
+      is_gate_fuse: false
+    criterion:
+      _target_: src.criterion.loss.DepthLoss
+      args:
+        loss: 1.0*L2+1.0*L1
+        max_depth: ${max_depth}
+    refiner:
+      _target_: src.models.refiners.NLSPN
+      args:
+        prop_time: 18
+        affinity: TGASS
+        affinity_gamma: 0.5
+        conf_prop: true
+        legacy: false
+        preserve_input: false
+      ch_g: 8
+      ch_f: 1
+      k_g: 3
+      k_f: 3
+  scheduler:
+    _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
+    _partial_: true
+    mode: min
+    factor: 0.3
+    patience: 5
+    threshold_mode: rel
+    threshold: 0.005
+
+task_name: ${model.net.backbone_l.model_name}_${model.net.backbone_g.model_name}_no_fuse
+max_depth: 10.0
+base_lr: 0.0001

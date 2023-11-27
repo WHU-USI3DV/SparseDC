@@ -1,0 +1,47 @@
+_target_: src.models.model.DepthLitModule
+
+is_warmup: false
+monitor: ${monitor}
+base_lr: ${base_lr}
+save_dir: ${paths.output_dir}
+dataset: ${data.dataset}
+
+net:
+  _target_: src.models.base.Uncertainty_
+  backbone_g:
+    _target_: src.models.backbones.PVTV2
+  backbone_l:
+    _target_: src.models.backbones.ResNetU_
+    model_name: 'resnet18'
+  decode:
+    _target_: src.models.decodes.UncertaintyFuse_
+    max_depth: ${max_depth}
+  criterion:
+    _target_: src.criterion.loss.DepthLoss
+    args:
+      loss: 1.0*L2+1.0*Edge
+      max_depth: ${max_depth}
+  channels: 64
+  is_padding: true
+  padding_size: [256, 320]
+  max_depth: ${max_depth}
+
+
+optimizer:
+  _target_: torch.optim.Adam
+  _partial_: true
+  lr: ${base_lr}
+  weight_decay: 0.00001
+
+scheduler:
+  _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
+  _partial_: true
+  mode: min
+  factor: 0.3
+  patience: 5
+  threshold_mode: rel
+  threshold: 0.01
+
+metric:
+  _target_: src.criterion.metric.DepthCompletionMetric
+  max_depth: ${max_depth}

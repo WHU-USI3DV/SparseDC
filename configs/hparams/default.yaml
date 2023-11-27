@@ -1,0 +1,19 @@
+# @package _global_
+batch_size: 8
+num_workers: 8
+
+# seed for random number generators in pytorch, numpy and python.random
+seed: 2023
+
+# monitor metric
+monitor: "RMSE"
+
+num_sample: 500
+
+base_lr: 0.001
+
+max_depth: 10.0
+
+is_sparse: True
+
+is_fill: False

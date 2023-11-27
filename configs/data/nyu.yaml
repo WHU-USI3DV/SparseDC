@@ -1,0 +1,11 @@
+_target_: src.data.DataModule
+dataset: nyu
+batch_size: ${batch_size}
+num_workers: ${num_workers}
+pin_memory: true
+args:
+  augment: true
+  data_dir: ${paths.data_dir}/nyudepthv2
+  split_json: nyu.json
+  num_sample: ${num_sample}
+  is_sparse: ${is_sparse}

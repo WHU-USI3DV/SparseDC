@@ -1,0 +1,23 @@
+# @package _global_
+
+defaults:
+  - _self_
+  - data: nyu # choose datamodule with `test_dataloader()` for evaluation
+  - model: default
+  - logger: tensorboard
+  - trainer: gpu
+  - paths: default
+  - extras: default
+  - hydra: default
+  - hparams: default
+  - experiment: default
+
+mode: "eval"
+task_name: "eval"
+
+tags: ["dev"]
+
+seed: 2023
+
+# passing checkpoint path is necessary for evaluation
+ckpt_path: ???
