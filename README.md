@@ -138,7 +138,6 @@ $ python train.py experiment=final_version
 ## ✏️ Test
 To eval SparseDC on three benchmarks, you can use the following commands:
 ```bash
-$ cd scripts
 $ ./eval_nyu.sh final_version final_version pretrain/nyu.ckpt
 $ ./eval_kitti.sh final_version_kitti_test final_verison pretrain/kitti.ckpt
 $ ./eval_sunrgbd.sh final_version final_verison pretrain/nyu.ckpt

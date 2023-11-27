@@ -1,5 +1,4 @@
 #/usr/bin
-cd ../
 NAME=$1
 EXPERIMENTS=$2
 CKPT_PATH=$3

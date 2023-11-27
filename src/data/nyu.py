@@ -207,18 +207,11 @@ class NYUDataset(BaseDataset):
                 mask = torch.zeros([channel, height, width])
                 mask[:, x_idx, y_idx] = 1.0
                 dep_sp = dep * mask.type_as(dep)
-            elif num_sample == "non_uniform":
+            elif num_sample == "uneven_density":
                 mask = torch.zeros([channel, height, width])
                 x_idx, y_idx = self.get_sparse_idx(width, height, 25, 25, 100)
                 mask[:, x_idx, y_idx] = 1.0
                 x_idx, y_idx = self.get_sparse_idx(width, height, 100, 100, 400)
-                mask[:, x_idx, y_idx] = 1.0
-                dep_sp = dep * mask.type_as(dep)
-            elif num_sample == "non_uniform2":
-                mask = torch.zeros([channel, height, width])
-                x_idx, y_idx = self.get_sparse_idx(width, height, 100, 100, 90)
-                mask[:, x_idx, y_idx] = 1.0
-                x_idx, y_idx = self.get_sparse_idx(width, height, width, height, 10)
                 mask[:, x_idx, y_idx] = 1.0
                 dep_sp = dep * mask.type_as(dep)
             elif num_sample == "holes":
