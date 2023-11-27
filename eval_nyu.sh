@@ -1,5 +1,4 @@
 #/usr/bin
-cd ../
 EXP=$1
 NAME=$2
 CKPT_PATH=$3
