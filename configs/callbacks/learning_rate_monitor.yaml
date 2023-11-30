@@ -1,0 +1,4 @@
+learning_rate_monitor:
+  _target_: pytorch_lightning.callbacks.LearningRateMonitor
+  logging_interval: null
+  log_momentum: False

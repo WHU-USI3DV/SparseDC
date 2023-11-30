@@ -40,7 +40,11 @@ The code has been tested on:
   conda env create -f environment.yaml
   conda activate sparsedc
   ```
-- Second, Build and Install the [DCN](https://github.com/charlesshang/DCNv2) Module for refiner.
+- Second, Install the [MMCV](https://mmcv.readthedocs.io/zh-cn/v1.7.0/get_started/installation.html)
+  ```
+  mim install mmcv-full
+  ```
+- Finally, Build and Install the [DCN](https://github.com/charlesshang/DCNv2) Module for refiner.
   ```
   cd src/plugins/deformconv
   python setup.py build install
@@ -58,11 +62,16 @@ $ cd PATH_TO_DOWNLOAD
 $ wget http://datasets.lids.mit.edu/sparse-to-dense/data/nyudepthv2.tar.gz
 $ tar -xvf nyudepthv2.tar.gz
 ```
+Note that the original full NYUv2 dataset is available at the [official website](https://cs.nyu.edu/~silberman/datasets/nyu_depth_v2.html).
+
+
+Then, you should generate a json file containing paths to individual images. We use the data lists for NYUv2 borrowed from the [NLSPN repository](https://github.com/zzangjinsun/NLSPN_ECCV20/blob/master/data_json/nyu.json). You can put this json into your data dir.
 
 After that, you will get a data structure as follows:
 
 ```
 nyudepthv2
+├── nyu.json
 ├── train
 │    ├── basement_0001a
 │    │    ├── 00001.h5
@@ -76,17 +85,6 @@ nyudepthv2
         ├── 00001.h5
         └── ...
 ```
-
-Note that the original full NYUv2 dataset is available at the [official website](https://cs.nyu.edu/~silberman/datasets/nyu_depth_v2.html).
-
-After preparing the dataset, you should generate a json file containing paths to individual images.
-
-```bash
-$ cd THIS_PROJECT_ROOT/utils
-$ python generate_json_NYUDepthV2.py --path_root PATH_TO_NYUv2
-```
-
-Note that data lists for NYUv2 are borrowed from the [CSPN repository](https://github.com/XinJCheng/CSPN/tree/master/cspn_pytorch/datalist).
 
 
 #### KITTI Depth Completion (KITTI DC)
@@ -121,15 +119,15 @@ The overall data directory is structured as follows:
 
 SUN RGB-D dataset is available at the [SUN RGB-D Website](https://rgbd.cs.princeton.edu/).
 
-We used processed dataset provided by [ankurhanda](https://github.com/ankurhanda/sunrgbd-meta-data/tree/master). The Refiner depth images are contained in the depth_bfx folder in the SUN RGB-D dataset. Also, you can directly download our organized data from [GoogleDrive]().
+We used processed dataset provided by [ankurhanda](https://github.com/ankurhanda/sunrgbd-meta-data/tree/master). The refined depth images are contained in the depth_bfx folder in the SUN RGB-D dataset. Also, you can directly download our organized data from [GoogleDrive](https://drive.google.com/drive/folders/1TrukkSDESG2i8MD_l-wet84NvgyaihD-?usp=sharing).
 
 ## 🚅 Pretrained model
 
-You can download the pretrained model from [GoogleDrive](), and put it in folder `pretrain/`.
+You can download the pretrained model from [GoogleDrive](https://drive.google.com/drive/folders/1EmTFrqGnnh9a5ZsQ8ydSZC3PK-NeGDlX?usp=sharing), and put it in folder `pretrain/`.
 
 ## ⏳ Train
 
-To train SparseDC, you should prepare the dataset, and replace the [--data_dir](/configs/paths/default.yaml) to your data path. Then, you use the follow command:
+To train SparseDC, you should prepare the dataset, and replace the ["data_dir"](/configs/paths/default.yaml) to your data path. Then, you use the follow command:
 
 ```bash
 $ python train.py experiment=final_version
@@ -139,8 +137,8 @@ $ python train.py experiment=final_version
 To eval SparseDC on three benchmarks, you can use the following commands:
 ```bash
 $ ./eval_nyu.sh final_version final_version pretrain/nyu.ckpt
-$ ./eval_kitti.sh final_version_kitti_test final_verison pretrain/kitti.ckpt
-$ ./eval_sunrgbd.sh final_version final_verison pretrain/nyu.ckpt
+$ ./eval_kitti.sh final_version_kitti final_version_kitti_test pretrain/kitti.ckpt
+$ ./eval_sunrgbd.sh final_version final_version pretrain/nyu.ckpt
 ```
 
 ## 💡 Citation

@@ -233,10 +233,10 @@ def batch_save_kitti(rgb, dep, pred, gt, offset, path):
         mask = (gt[i] > 0.001).detach()
         r = rgb[i].data.cpu().numpy()
         r = np.transpose(r, (1, 2, 0))
+        max_d = gt[i].max()
         d = preprocess_depth(dep[i], max_d)
-        max_d = gtd.max()
         predd = preprocess_depth(pred[i], max_d)
-        off = preprocess_depth(offset[i] * mask)
+        off = preprocess_depth(offset[i] * mask, max_d)
         gtd = preprocess_depth(gt[i], max_d)
         merge_imags = [r, d, predd, off, gtd]
         merge_imags = np.hstack(merge_imags)
