@@ -7,11 +7,11 @@ This is the official PyTorch implementation of the following publication:
 > **SparseDC: Depth Completion from sparse and non-uniform inputs**<br/>
 > [Chen Long](https://chenlong-whu.github.io/), [Wenxiao Zhang](https://github.com/XLechter), [Zhe Chen](https://github.com/ChenZhe-Code), [Haiping Wang](https://hpwang-whu.github.io/), [Yuan Liu](https://liuyuan-pal.github.io/), [Zhen Cao](https://github.com/a4152684), [Zhen Dong](https://dongzhenwhu.github.io/index.html), [Bisheng Yang](https://3s.whu.edu.cn/info/1025/1415.htm)<br/>
 > *ArXiv 2023*<br/>
-> [**Paper**]() | [**Project-page**]() | [**Video**]()
+> [**Paper**](https://arxiv.org/pdf/2312.00097) | [**Project-page**]() | [**Video**]()
 
 
 ## 🔭 Introduction
-<p align="center">
+<p align="center" style="font-size:18px">
 <strong>SparseDC: Depth Completion from sparse and non-uniform inputs</strong>
 </p>
 <img src="media/teaser.png" alt="Network" style="zoom:50%;">
@@ -24,15 +24,15 @@ Second, we propose a two-branch feature embedder to predict both the precise loc
 </p>
 
 ## 🆕 News
-- 2023-11-30: Code, [Preprint paper](https://arxiv.org/abs/2310.03420) are aviliable! 🎉
+- 2023-12-04: Code, [Preprint paper](https://arxiv.org/pdf/2312.00097) are aviliable! 🎉
 
 ## 💻 Requirements
-The code has been tested on:
+The code has been trained on:
 - Ubuntu 20.04
 - CUDA 11.3
 - Python 3.9.18
 - Pytorch 1.12.1
-- GeForce RTX 4090.
+- GeForce RTX 4090 $\times$ 2.
 
 ## 🔧 Installation
 - First, create the conda environment:
@@ -130,7 +130,8 @@ You can download the pretrained model from [GoogleDrive](https://drive.google.co
 To train SparseDC, you should prepare the dataset, and replace the ["data_dir"](/configs/paths/default.yaml) to your data path. Then, you use the follow command:
 
 ```bash
-$ python train.py experiment=final_version
+$ python train.py experiment=final_version         # for NYUDepth
+$ python train.py experiment=final_version_kitti   # for KITTIDC
 ```
 
 ## ✏️ Test
@@ -145,10 +146,20 @@ $ ./eval_sunrgbd.sh final_version final_version pretrain/nyu.ckpt
 If you find this repo helpful, please give us a 😍 star 😍.
 Please consider citing SparseDC if this program benefits your project
 
+```Tex
+@misc{long2023sparsedc,
+  title={SparseDC: Depth Completion from sparse and non-uniform inputs},
+  author={Chen Long and Wenxiao Zhang and Zhe Chen and Haiping Wang and Yuan Liu and Zhen Cao and Zhen Dong and Bisheng Yang},
+  year={2023},
+  eprint={2312.00097},
+  archivePrefix={arXiv},
+  primaryClass={cs.CV}
+}
+```
 
 ## 🔗 Related Projects
 We sincerely thank the excellent projects:
 - [PE-Net](https://github.com/JUGGHM/PENet_ICRA2021) for DataLoader;
-- [NLSPN](https://github.com/zzangjinsun/NLSPN_ECCV20#deformable-convolution-v2-dcnv2) for metric depth completion;
+- [NLSPN](https://github.com/zzangjinsun/NLSPN_ECCV20#deformable-convolution-v2-dcnv2) for depth completion metric loss calculation;
 - [FreeReg](https://github.com/WHU-USI3DV/FreeReg) for readme template;
 - [Lightning-hydra-template](https://github.com/ashleve/lightning-hydra-template) for code organization.
