@@ -24,7 +24,7 @@ Second, we propose a two-branch feature embedder to predict both the precise loc
 </p>
 
 ## 🆕 News
-- 2023-12-04: Code, [Preprint paper](https://arxiv.org/pdf/2312.00097) are aviliable! 🎉
+- 2023-12-04: Code, [Preprint paper](https://arxiv.org/pdf/2312.00097) are available! 🎉
 
 ## 💻 Requirements
 The code has been trained on:
