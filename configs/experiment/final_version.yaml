@@ -53,8 +53,8 @@ model:
     mode: min
     factor: 0.3
     patience: 5
-    threshold_mode: rel
-    threshold: 0.005
+    threshold_mode: abs
+    threshold: 0.0001
 
 task_name: ${model.net.backbone_l.model_name}_${model.net.backbone_g.model_name}_final_version
 max_depth: 10.0
