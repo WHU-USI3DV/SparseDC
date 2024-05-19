@@ -46,6 +46,7 @@ class NYUDataset(BaseDataset):
         self.mode = mode
         self.augment = args.augment
         self.is_sparse = args.is_sparse
+        self.is_coarse = args.is_coarse
 
         self.K = torch.Tensor(
             [
@@ -69,10 +70,14 @@ class NYUDataset(BaseDataset):
         f = h5py.File(path_file, "r")
         rgb_h5 = f["rgb"][:].transpose(1, 2, 0)
         dep_h5 = f["depth"][:]
+        if self.is_coarse:
+            coarse_h5 = f["coarse"][:]
         f.close()
 
         rgb = Image.fromarray(rgb_h5, mode="RGB")
         dep = Image.fromarray(dep_h5.astype("float32"), mode="F")
+        if self.is_coarse:
+            coarse = Image.fromarray(coarse_h5.astype("float32"), mode="F")
 
         if self.augment and self.mode == "train":
             _scale = np.random.uniform(1.0, 1.5)
@@ -108,8 +113,11 @@ class NYUDataset(BaseDataset):
 
             rgb = t_rgb(rgb)
             dep = t_dep(dep)
-
             dep = dep / _scale
+
+            if self.is_coarse:
+                coarse = t_dep(coarse)
+                coarse = coarse / _scale
 
         else:
             t_rgb = T.Compose(
@@ -133,6 +141,9 @@ class NYUDataset(BaseDataset):
             rgb = t_rgb(rgb)
             dep = t_dep(dep)
 
+            if self.is_coarse:
+                coarse = t_dep(coarse)
+
         if self.mode == "train" and self.is_sparse:
             num_sample = random.randint(5, self.num_sample)
         else:
@@ -145,6 +156,8 @@ class NYUDataset(BaseDataset):
             dep_sp = self.get_sparse_depth(dep, num_sample)
 
         output = {"rgb": rgb, "dep": dep_sp, "gt": dep}
+        if self.is_coarse:
+            output = {"rgb": rgb, "dep": dep_sp, "gt": dep, "coarse": coarse}
 
         return output
 
@@ -224,6 +237,22 @@ class NYUDataset(BaseDataset):
             elif "keypoints" in num_sample:
                 assert _mask is not None
                 dep_sp = dep * _mask.type_as(dep)
+            elif num_sample == 'short_range':
+                range = torch.median(dep[dep>0])
+                idx_nnz = torch.nonzero((dep.view(-1) > 0.0001) * (dep.view(-1) < range), as_tuple=False)
+                num_idx = len(idx_nnz)
+                idx_sample = torch.randperm(num_idx)[:250]
+                idx_nnz = idx_nnz[idx_sample[:]]
+                mask = torch.zeros((channel * height * width))
+                mask[idx_nnz] = 1.0
+                mask = mask.view((channel, height, width))
+                dep_sp = dep * mask.type_as(dep)
+            elif num_sample == 'up_fov':
+                mask = torch.zeros([channel, height, width])
+                ratio = 0.6
+                x_idx, y_idx = self.get_sparse_idx(width, height, int(ratio * width), int(ratio*height), int(500 * ratio * ratio), int((1-ratio) / 2*width), int((1-ratio)/2*height))
+                mask[:, x_idx, y_idx] = 1.0
+                dep_sp = dep * mask.type_as(dep)
         else:
             idx_nnz = torch.nonzero(dep.view(-1) > 0.0001, as_tuple=False)
 

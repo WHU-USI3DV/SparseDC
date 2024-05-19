@@ -5,7 +5,7 @@ import numpy as np
 import os
 import torchvision.transforms.functional as TF
 from PIL import Image
-
+import torch.nn.functional as F
 
 class BaseDataset(torch.utils.data.Dataset):
     def __init__(self):
@@ -45,7 +45,7 @@ class SUNDataset(BaseDataset):
         self.augment = args.augment
 
         if self.mode == "train" or self.mode == "val":
-            self.file_name = os.listdir(os.path.join(self.data_dir, "train_depth"))
+            self.file_name = os.listdir(os.path.join(self.data_dir, "test_depth"))
         else:
             self.file_name = os.listdir(os.path.join(self.data_dir, "test_depth"))
 
@@ -97,7 +97,7 @@ class SUNDataset(BaseDataset):
 
             t_rgb = T.Compose(
                 [
-                    T.Resize(scale),
+                    T.Resize(self.height),
                     T.ColorJitter(brightness=0.4, contrast=0.4, saturation=0.4),
                     T.CenterCrop(self.crop_size),
                     T.ToTensor(),
@@ -107,7 +107,7 @@ class SUNDataset(BaseDataset):
 
             t_dep = T.Compose(
                 [
-                    T.Resize(scale),
+                    self.AdaResize(self.height, self.width),
                     T.CenterCrop(self.crop_size),
                     self.ToNumpy(),
                     T.ToTensor(),
@@ -131,7 +131,7 @@ class SUNDataset(BaseDataset):
 
             t_dep = T.Compose(
                 [
-                    T.Resize(self.height),
+                    self.AdaResize(self.height, self.width),
                     T.CenterCrop(self.crop_size),
                     self.ToNumpy(),
                     T.ToTensor(),
@@ -169,6 +169,22 @@ class SUNDataset(BaseDataset):
     class ToNumpy:
         def __call__(self, sample):
             return np.array(sample)
+
+    class AdaResize:
+        def __init__(self, height, width) -> None:
+            self.height = height
+            self.width = width
+        def __call__(self, sample):
+            sample = torch.from_numpy(np.array(sample, dtype=np.float32))
+            sample = sample.unsqueeze(0).unsqueeze(0)
+            m = sample > 0
+            sample = F.interpolate(sample, size=(self.height, self.width), mode='bilinear')
+            m = F.interpolate(m.float(), size=(self.height, self.width), mode='bilinear')
+            sample = (m > 0) * sample / (m + 1e-8)
+            sample = sample.squeeze(0).squeeze(0)
+            sample = sample.numpy()
+            sample = Image.fromarray(sample.astype("float32"), mode="F")
+            return sample
 
 
 if __name__ == "__main__":

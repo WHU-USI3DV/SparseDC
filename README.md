@@ -1,18 +1,18 @@
 <h2>
-<a href="https://whu-usi3dv.github.io/SparseDC/" target="_blank">SparseDC: Depth Completion from sparse and non-uniform inputs</a>
+<a href="https://whu-usi3dv.github.io/SparseDC/" target="_blank">SparseDC: Depth completion from sparse and non-uniform inputs</a>
 </h2>
 
 This is the official PyTorch implementation of the following publication:
 
-> **SparseDC: Depth Completion from sparse and non-uniform inputs**<br/>
-> [Chen Long](https://chenlong-whu.github.io/), [Wenxiao Zhang](https://github.com/XLechter), [Zhe Chen](https://github.com/ChenZhe-Code), [Haiping Wang](https://hpwang-whu.github.io/), [Yuan Liu](https://liuyuan-pal.github.io/), [Zhen Cao](https://github.com/a4152684), [Zhen Dong](https://dongzhenwhu.github.io/index.html), [Bisheng Yang](https://3s.whu.edu.cn/info/1025/1415.htm)<br/>
-> *ArXiv 2023*<br/>
-> [**Paper**](https://arxiv.org/pdf/2312.00097) | [**Project-page**]() | [**Video**]()
+> **SparseDC: Depth completion from sparse and non-uniform inputs**<br/>
+> [Chen Long](https://chenlong-whu.github.io/), [Wenxiao Zhang](https://github.com/XLechter), [Zhe Chen](https://github.com/ChenZhe-Code), [Haiping Wang](https://hpwang-whu.github.io/), [Yuan Liu](https://liuyuan-pal.github.io/), [Peiling Tong](https://3s.whu.edu.cn/info/1028/1961.htm), [Zhen Cao](https://github.com/a4152684), [Zhen Dong](https://dongzhenwhu.github.io/index.html), [Bisheng Yang](https://3s.whu.edu.cn/info/1025/1415.htm)<br/>
+> *Information Fusion 2024*<br/>
+> [**Paper**](https://doi.org/10.1016/j.inffus.2024.102470) | [**Project-page**]() | [**Video**]()
 
 
 ## 🔭 Introduction
 <p align="center" style="font-size:18px">
-<strong>SparseDC: Depth Completion from sparse and non-uniform inputs</strong>
+<strong>SparseDC: Depth completion from sparse and non-uniform inputs</strong>
 </p>
 <img src="media/teaser.png" alt="Network" style="zoom:50%;">
 
@@ -24,6 +24,7 @@ Second, we propose a two-branch feature embedder to predict both the precise loc
 </p>
 
 ## 🆕 News
+- 2024-04-10: [SparseDC](https://doi.org/10.1016/j.inffus.2024.102470) is accepted by Information Fusion! 🎉
 - 2023-12-04: Code, [Preprint paper](https://arxiv.org/pdf/2312.00097) are available! 🎉
 
 ## 💻 Requirements
@@ -93,6 +94,8 @@ KITTI DC dataset is available at the [KITTI DC Website](http://www.cvlibs.net/da
 
 For color images, KITTI Raw dataset is also needed, which is available at the [KITTI Raw Website](http://www.cvlibs.net/datasets/kitti/raw_data.php). You can refer to [this script](https://github.com/youmi-zym/CompletionFormer/issues/8#issuecomment-1602302424) for data preparation.
 
+During testing, you can use [this script](https://github.com/placeforyiming/RAL_Non-Learning_DepthCompletion/blob/d7f7e7d3143262419fc646a451ed46dc585892a0/subsample_Lidar_val.py) to subsample depth maps, or you can directly download our processed data from [GoogleDrive](https://drive.google.com/file/d/1U-O6la4ttZYpN99gOUAB3_CmgTbICG4W/view?usp=drive_link). Then, put the test data in the data folder `kitti_depth/data_depth_selection/val_selection_cropped/`.
+
 The overall data directory is structured as follows:
 
 ```
@@ -107,6 +110,9 @@ The overall data directory is structured as follows:
 |   |  ├── test_depth_completion_anonymous
 |   |  |── test_depth_prediction_anonymous
 |   |  ├── val_selection_cropped
+|   |  |  |── velodyne_raw_lines64
+|   |  |  |── ...
+|   |  |  |── velodyne_raw_lines4
 ├── kitti_raw
 |   ├── 2011_09_26
 |   ├── 2011_09_28
@@ -147,13 +153,17 @@ If you find this repo helpful, please give us a 😍 star 😍.
 Please consider citing SparseDC if this program benefits your project
 
 ```Tex
-@misc{long2023sparsedc,
-  title={SparseDC: Depth Completion from sparse and non-uniform inputs},
-  author={Chen Long and Wenxiao Zhang and Zhe Chen and Haiping Wang and Yuan Liu and Zhen Cao and Zhen Dong and Bisheng Yang},
-  year={2023},
-  eprint={2312.00097},
-  archivePrefix={arXiv},
-  primaryClass={cs.CV}
+@article{LONG2024102470,
+  title = {SparseDC: Depth completion from sparse and non-uniform inputs},
+  journal = {Information Fusion},
+  volume = {110},
+  pages = {102470},
+  year = {2024},
+  issn = {1566-2535},
+  doi = {https://doi.org/10.1016/j.inffus.2024.102470},
+  url = {https://www.sciencedirect.com/science/article/pii/S1566253524002483},
+  author = {Chen Long and Wenxiao Zhang and Zhe Chen and Haiping Wang and Yuan Liu and Peiling Tong and Zhen Cao and Zhen Dong and Bisheng Yang},
+  keywords = {Depth completion, Uncertainty, Information fusion},
 }
 ```
 

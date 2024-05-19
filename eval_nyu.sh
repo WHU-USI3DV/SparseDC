@@ -11,3 +11,5 @@ CUDA_VISIBLE_DEVICES=0 python eval.py experiment=$EXP ckpt_path=$CKPT_PATH num_s
 CUDA_VISIBLE_DEVICES=0 python eval.py experiment=$EXP ckpt_path=$CKPT_PATH num_sample=10 task_name=${NAME}_10_sample ++trainer.deterministic=True $5
 CUDA_VISIBLE_DEVICES=0 python eval.py experiment=$EXP ckpt_path=$CKPT_PATH num_sample=5 task_name=${NAME}_5_sample ++trainer.deterministic=True $5
 CUDA_VISIBLE_DEVICES=0 python eval.py experiment=$EXP ckpt_path=$CKPT_PATH num_sample=keypoints_orb task_name=${NAME}_ORB ++trainer.deterministic=True $5
+CUDA_VISIBLE_DEVICES=0 python eval.py experiment=$EXP ckpt_path=$CKPT_PATH num_sample=up_fov task_name=up_fov ++trainer.deterministic=True $5
+CUDA_VISIBLE_DEVICES=0 python eval.py experiment=$EXP ckpt_path=$CKPT_PATH num_sample=short_range task_name=short_range ++trainer.deterministic=True $5
