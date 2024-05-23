@@ -46,7 +46,6 @@ class NYUDataset(BaseDataset):
         self.mode = mode
         self.augment = args.augment
         self.is_sparse = args.is_sparse
-        self.is_coarse = args.is_coarse
 
         self.K = torch.Tensor(
             [
@@ -70,14 +69,9 @@ class NYUDataset(BaseDataset):
         f = h5py.File(path_file, "r")
         rgb_h5 = f["rgb"][:].transpose(1, 2, 0)
         dep_h5 = f["depth"][:]
-        if self.is_coarse:
-            coarse_h5 = f["coarse"][:]
-        f.close()
 
         rgb = Image.fromarray(rgb_h5, mode="RGB")
         dep = Image.fromarray(dep_h5.astype("float32"), mode="F")
-        if self.is_coarse:
-            coarse = Image.fromarray(coarse_h5.astype("float32"), mode="F")
 
         if self.augment and self.mode == "train":
             _scale = np.random.uniform(1.0, 1.5)
@@ -115,10 +109,6 @@ class NYUDataset(BaseDataset):
             dep = t_dep(dep)
             dep = dep / _scale
 
-            if self.is_coarse:
-                coarse = t_dep(coarse)
-                coarse = coarse / _scale
-
         else:
             t_rgb = T.Compose(
                 [
@@ -141,9 +131,6 @@ class NYUDataset(BaseDataset):
             rgb = t_rgb(rgb)
             dep = t_dep(dep)
 
-            if self.is_coarse:
-                coarse = t_dep(coarse)
-
         if self.mode == "train" and self.is_sparse:
             num_sample = random.randint(5, self.num_sample)
         else:
@@ -156,8 +143,6 @@ class NYUDataset(BaseDataset):
             dep_sp = self.get_sparse_depth(dep, num_sample)
 
         output = {"rgb": rgb, "dep": dep_sp, "gt": dep}
-        if self.is_coarse:
-            output = {"rgb": rgb, "dep": dep_sp, "gt": dep, "coarse": coarse}
 
         return output
 
